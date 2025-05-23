@@ -1,10 +1,22 @@
-﻿namespace SqlServerExport
+﻿using System.Text;
+
+namespace SqlServerExport
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            LogService.Init();
+
+            try
+            {
+                await DapperExport.BackupToCsv();
+            }
+            catch (Exception ex)
+            {
+                LogService.Error(ex);
+            }
         }
     }
 }
