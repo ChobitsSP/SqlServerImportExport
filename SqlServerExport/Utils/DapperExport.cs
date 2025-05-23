@@ -58,7 +58,7 @@ namespace SqlServerExport
 
         public static async Task TableToCsv(IDbConnection conn, string tableName, string dir)
         {
-            var sql = $"SELECT * FROM {tableName}";
+            var sql = $"SELECT * FROM [{tableName}]";
             using var reader = await conn.ExecuteReaderAsync(sql);
             var filePath = Path.Combine(dir, $"{tableName}.csv");
             await WriteToCsv(reader, filePath);
