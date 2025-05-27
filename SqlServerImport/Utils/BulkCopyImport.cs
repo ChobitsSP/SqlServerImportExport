@@ -32,19 +32,22 @@ namespace SqlServerImport.Utils
             await conn.CloseAsync();
         }
 
+        public static Encoding GetEncoding()
+        {
+            var value = ConfigUtils.GetSectionValue("Backup:Encoding");
+            return string.IsNullOrEmpty(value) ? Encoding.UTF8 : Encoding.GetEncoding(value);
+        }
+
         public static DataTable ReadCsv(string filePath)
         {
             var dt = new DataTable();
 
-            using (var reader = new StreamReader(filePath, encoding: Encoding.GetEncoding("GBK")))
-            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
-            {
-                // Do any configuration to `CsvReader` before creating CsvDataReader.
-                using (var dr = new CsvDataReader(csv))
-                {
-                    dt.Load(dr);
-                }
-            }
+            using var reader = new StreamReader(filePath, encoding: GetEncoding());
+            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+
+            // Do any configuration to `CsvReader` before creating CsvDataReader.
+            using var dr = new CsvDataReader(csv);
+            dt.Load(dr);
 
             return dt;
         }
