@@ -24,7 +24,7 @@ namespace SqlServerImport
 
                 try
                 {
-                    await BulkCopyImport.ImportData(csvFile, fileName, batchSize);
+                    await DapperImport.Import(csvFile, fileName, batchSize);
                 }
                 catch (Exception ex)
                 {
